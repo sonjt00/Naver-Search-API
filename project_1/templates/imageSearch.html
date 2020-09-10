@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <title> Image Search </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content = "width = device-width, initial-scale = 1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <style>
+      body{text-align: center; font-family: 'Do Hyeon', sans-serif;  color: dimgrey; background: blanchedalmond; margin-top: 2rem}
+      .every_card{width: 90%; margin: 1rem auto;}
+      .card{width: 20%; display: inline-block; height: 25rem; transform: scale(0.9); border: none;background: blanchedalmond}
+      input[type=text]{text-align: center; margin-bottom: 2rem; margin-top: 1rem; border-radius: 0.5rem}
+      .btn-info{background: white; color: dimgrey}
+    </style>
+  </head>
+  <body>
+    <h2> 카테고리별 이미지 검색 </h2>
+    <input type = "text" id = "search" onkeydown="search()">
+    <h3 class = "category"> </h3>
+    <div class = "every_card"> </div>
+
+    <script>
+      function search() {
+          if(event.keyCode == 13) {
+              $('.category').html("");
+              $('.every_card').html("");
+              $('.every_card').hide();
+              $('.category').html(document.getElementById('search')['value'] + " 관련 Image");
+              var search = document.getElementById('search')['value']
+              $.ajax({
+                  type : "GET",
+                  url : "/image1?search=" + search,
+                  data: {},
+                  success: function (response){
+                      for (var  i = 0; i <  response.length; i ++) {
+                          var each = response[i]
+                          console.log(each)
+                          var li = each['link']
+                          var card_text = '<div class="card">\n' +
+                                '    <img width="100%" height="70%" src="'+ li +'"/>\n' +
+                                '  <br><br>   <button type="button" class="btn btn-info" onclick="window.open(\''+ li +'\')">이미지 방문</button>\n' +
+                                '</div> &ensp;';
+                          $('.every_card').append(card_text)
+                      }
+                      $('.every_card').fadeIn(1000);
+                  }
+              })
+          }
+      }
+    </script>
+  </body>
+</html>
